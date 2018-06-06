@@ -46,7 +46,7 @@ describe('lib/vacation.js', () => {
 
 			await vacation.calculate('2017', 'input.csv', 'output.csv');
 
-			sinon.assert.calledWith(loggerMock.warn, `The following row is not valid: ${Object.values(employee).join(', ')}`);
+			sinon.assert.calledWith(loggerMock.warn, 'Information is not valid for ');
 			sinon.assert.calledWith(tableMock.write, 'output.csv', [{days: null, name: ''}]);
 		});
 
@@ -62,7 +62,7 @@ describe('lib/vacation.js', () => {
 
 			await vacation.calculate('2017', 'input.csv', 'output.csv');
 
-			sinon.assert.calledWith(loggerMock.warn, `The following row is not valid: ${Object.values(employee).join(', ')}`);
+			sinon.assert.calledWith(loggerMock.warn, `Information is not valid for ${employee.Name}`);
 			sinon.assert.calledWith(tableMock.write, 'output.csv', [{days: null, name: 'Hans'}]);
 		});
 
@@ -78,7 +78,7 @@ describe('lib/vacation.js', () => {
 
 			await vacation.calculate('2017', 'input.csv', 'output.csv');
 
-			sinon.assert.calledWith(loggerMock.warn, `The following row is not valid: ${Object.values(employee).join(', ')}`);
+			sinon.assert.calledWith(loggerMock.warn, `Information is not valid for ${employee.Name}`);
 			sinon.assert.calledWith(tableMock.write, 'output.csv', [{days: null, name: 'Hans'}]);
 		});
 	});
@@ -230,6 +230,25 @@ describe('lib/vacation.js', () => {
 			}]);
 		});
 
+		it('that carries over 1/12 of the their PREVIOUS year vacation days to the 2-nd year', async () => {
+			const employee = {
+				'Name': 'Hans',
+				'Date of birth': '01.01.1970',
+				'Start date': '01.12.1999',
+				'Special contract': '',
+			};
+			const outputFile = 'output.csv';
+			tableMock.read = sinon.stub().returns([employee]);
+
+			await vacation.calculate('2000', 'input.csv', outputFile);
+
+			sinon.assert.calledWith(tableMock.write, 'output.csv', [{
+				name: 'Hans',
+				// +1 due to additional day by age rule which is applicable only from the current year
+				days: +(MIN_VACATION_DAYS / 12).toFixed(1) + MIN_VACATION_DAYS + 1,
+			}]);
+		});
+
 		it('that carries over days to the 2-nd year even if person has started not in January', async () => {
 			const employee = {
 				'Name': 'Hans',
@@ -284,7 +303,7 @@ describe('lib/vacation.js', () => {
 			}]);
 		});
 
-		it('that newcomers will get 1/12 of the their yearly vacation days irregardless of starting day', async () => {
+		it('that newcomers will get 1/12 of the their yearly vacation days for each month irregardless of starting day', async () => {
 			const employee = {
 				'Name': 'Hans',
 				'Date of birth': '01.01.2000',
