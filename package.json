@@ -1,0 +1,36 @@
+{
+  "name": "employees-info-system",
+  "version": "1.0.0",
+  "description": "Small CLI for employees information system",
+  "main": "index.js",
+  "scripts": {
+    "test": "NODE_PATH=. node_modules/mocha/bin/_mocha -- $(find tests -name '*.test.js')",
+    "test:watch": "NODE_PATH=. node_modules/mocha/bin/_mocha -w -- $(find tests -name '*.test.js')",
+    "lint": "NODE_PATH=. ./node_modules/.bin/eslint $(find . -name '**.js' -not -path '*node_modules/*')",
+    "coverage": "NODE_PATH=. node_modules/nyc/bin/nyc.js --all --include lib/ -r lcov -r text node node_modules/.bin/_mocha $(find tests -name '*.test.js')"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andreyrozumnyi/employees-info-system.git"
+  },
+  "author": "Andrii Rozumnyi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/andreyrozumnyi/employees-info-system/issues"
+  },
+  "homepage": "https://github.com/andreyrozumnyi/employees-info-system#readme",
+  "dependencies": {
+    "commander": "2.15.1",
+    "csvtojson": "2.0.3",
+    "json2csv": "4.1.3",
+    "moment": "2.22.2",
+    "signale": "1.1.0"
+  },
+  "devDependencies": {
+    "eslint": "4.19.1",
+    "mocha": "5.2.0",
+    "nyc": "12.0.2",
+    "proxyquire": "2.0.1",
+    "sinon": "5.0.10"
+  }
+}
