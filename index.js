@@ -8,7 +8,7 @@ const vacation = require('./lib/vacation.js');
 let started = false;
 
 program
-	.version('0.0.1', '-v, --version')
+	.version('1.0.0', '-v, --version')
 	.description('Employees information system');
 
 program
